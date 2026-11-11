@@ -1,65 +1,181 @@
 package com.example.formula1fantasy.pantallas
 
-import androidx.annotation.DrawableRes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.example.formula1fantasy.R
+import com.example.formula1fantasy.model.Escuderia
 import com.example.formula1fantasy.model.Piloto
+import com.example.formula1fantasy.model.Posicion
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun pantallaInicio(){
-    Column() {
-        Text()
-        SearchBar()
+fun pantallaInicio(modifier: Modifier = Modifier){
+
+    val listaPilotos = remember {
+        mutableListOf(
+            Piloto(
+                nombre = "Max Verstappen",
+                escuderia = Escuderia.RED_BULL,
+                carrera = "GP de Baréin",
+                fecha = "02/03/2026",
+                puntaje = 95,
+                posicion = Posicion.PILOTO_1,
+                imagen = R.drawable.verstappen
+            ),
+            Piloto(
+                nombre = "Fernando Alonso",
+                escuderia = Escuderia.ASTON_MARTIN,
+                carrera = "GP de Baréin",
+                fecha = "02/03/2026",
+                puntaje = 88,
+                posicion = Posicion.PILOTO_1,
+                imagen = R.drawable.alonso
+            ),
+            Piloto(
+                nombre = "Lewis Hamilton",
+                escuderia = Escuderia.FERRARI,
+                carrera = "GP de Baréin",
+                fecha = "02/03/2026",
+                puntaje = 84,
+                posicion = Posicion.PILOTO_2,
+                imagen = R.drawable.hamilton
+            ),
+            Piloto(
+                nombre = "Charles Leclerc",
+                escuderia = Escuderia.FERRARI,
+                carrera = "GP de Baréin",
+                fecha = "02/03/2026",
+                puntaje = 90,
+                posicion = Posicion.PILOTO_1,
+                imagen = R.drawable.leclerc
+            ),
+            Piloto(
+                nombre = "Carlos Sainz",
+                escuderia = Escuderia.WILLIAMS,
+                carrera = "GP de Baréin",
+                fecha = "02/03/2026",
+                puntaje = 86,
+                posicion = Posicion.PILOTO_2,
+                imagen = R.drawable.sainz
+            ),
+            Piloto(
+                nombre = "Lando Norris",
+                escuderia = Escuderia.MCLAREN,
+                carrera = "GP de Baréin",
+                fecha = "02/03/2026",
+                puntaje = 89,
+                posicion = Posicion.PILOTO_1,
+                imagen = R.drawable.norris
+            ),
+            Piloto(
+                nombre = "Oscar Piastri",
+                escuderia = Escuderia.MCLAREN,
+                carrera = "GP de Baréin",
+                fecha = "02/03/2026",
+                puntaje = 82,
+                posicion = Posicion.PILOTO_2,
+                imagen = R.drawable.piastri
+            ),
+            Piloto(
+                nombre = "George Russell",
+                escuderia = Escuderia.MERCEDES,
+                carrera = "GP de Baréin",
+                fecha = "02/03/2026",
+                puntaje = 85,
+                posicion = Posicion.PILOTO_1,
+                imagen = R.drawable.russell
+            ),
+            Piloto(
+                nombre = "Franco Colapinto",
+                escuderia = Escuderia.WILLIAMS,
+                carrera = "GP de Baréin",
+                fecha = "02/03/2026",
+                puntaje = 75,
+                posicion = Posicion.RESERVA,
+                imagen = R.drawable.colapinto
+            )
+        )
+    }
+    Column(modifier = modifier) {
+        Text("Bienvenido a tu fantasy league")
+
+        val listaNombrePilotos = mutableListOf<String>()
+        listaPilotos.forEach { listaNombrePilotos.add(it.nombre) }
+        var buscado by remember { mutableStateOf("") }
+        var estadoBarra = rememberSearchBarState()
+        var estadoTexto = rememberTextFieldState()
+        val scope = rememberCoroutineScope()
+
+        SearchBar(
+            state = estadoBarra,
+            inputField = {
+                SearchBarDefaults.InputField(
+                    textFieldState = estadoTexto,
+                    searchBarState = estadoBarra,
+                    onSearch = {
+                        buscado = estadoTexto.text.toString()
+                        scope.launch { estadoBarra.animateToCollapsed() }
+                    },
+                    placeholder = {Text("Buscar...")},
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") }
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        )
         LazyColumn() {
-            items(30){
-                Piloto()
+            items(listaPilotos) {
+                ComPiloto(it)
             }
         }
-        Row() {
+        Row {
             ExtendedFloatingActionButton(
-                text = TODO(),
-                icon = TODO(),
-                onClick = TODO(),
-                textStyle = TODO(),
-                minWidth = TODO(),
-                minHeight = TODO(),
-                startPadding = TODO(),
-                endPadding = TODO(),
-                iconPadding = TODO(),
-                modifier = TODO(),
-                expanded = TODO(),
-                shape = TODO(),
-                containerColor = TODO(),
-                contentColor = TODO(),
-                elevation = TODO()
-            ) { }
-            ExtendedFloatingActionButton() { }
+                onClick = { /* Acción para añadir */ },
+                icon = { Icon(Icons.Default.Add, contentDescription = "Añadir") },
+                text = { Text("Añadir") }
+            )
         }
     }
 }
 
 @Composable
-fun Piloto(
-    piloto: Piloto
-    ){
+fun ComPiloto (piloto: Piloto){
     Row() {
         Image(
             contentDescription = null,
-            painter = painterResource(piloto.imagen)
+            painter = painterResource(piloto.imagen ?: R.drawable.ic_launcher_background)
         )
-        Column() {
+        Column {
             Text(piloto.nombre)
-            Text("$piloto.carrera, $piloto.fecha")
+            Text(piloto.escuderia.name)
+            Text("${piloto.carrera}, ${piloto.fecha}")
             Text(piloto.puntaje.toString())
         }
     }
