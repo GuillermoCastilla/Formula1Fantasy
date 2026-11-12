@@ -22,7 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxColors
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -35,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -58,7 +59,7 @@ import kotlin.text.contains
 fun pantallaInicio(modifier: Modifier = Modifier){
 
     val listaPilotos = remember {
-        mutableListOf(
+        mutableStateListOf(
             Piloto(
                 nombre = "Max Verstappen",
                 escuderia = Escuderia.RED_BULL,
@@ -142,6 +143,7 @@ fun pantallaInicio(modifier: Modifier = Modifier){
             )
         )
     }
+    val pilotosSeleccionados = remember { mutableStateListOf<Piloto>() }
     Column(modifier = modifier) {
         Text("Bienvenido a tu fantasy league")
 
@@ -223,9 +225,20 @@ fun pantallaInicio(modifier: Modifier = Modifier){
                 .weight(1f)
                 .padding(horizontal = 16.dp)
         ) {
-            items(listaPilotos) {
-                if (it.escuderia.name.contains(buscado)) {
-                    ComPiloto(it, modoEliminar)
+            items(listaPilotos) { piloto ->
+                if (piloto.escuderia.name.contains(buscado, ignoreCase = true)) {
+                    ComPiloto(
+                        piloto = piloto,
+                        modoEliminar = modoEliminar,
+                        estaSeleccionado = pilotosSeleccionados.contains(piloto),
+                        onCheckedChange = { seleccionado ->
+                            if (seleccionado) {
+                                pilotosSeleccionados.add(piloto)
+                            } else {
+                                pilotosSeleccionados.remove(piloto)
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -249,9 +262,17 @@ fun pantallaInicio(modifier: Modifier = Modifier){
             )
 
             ExtendedFloatingActionButton(
-                onClick = { modoEliminar = !modoEliminar },
+                onClick = {
+                    if (modoEliminar){
+                        listaPilotos.removeAll(pilotosSeleccionados)
+                        pilotosSeleccionados.clear()
+                        modoEliminar = false
+                    } else modoEliminar = true
+                },
                 icon = { Icon(Icons.Default.Delete, contentDescription = "Eliminar") },
-                text = { Text("Eliminar") },
+                text = {
+                    Text(if (modoEliminar) "Confirmar (${pilotosSeleccionados.size})" else "Eliminar")
+                },
 
             )
         }
@@ -259,7 +280,12 @@ fun pantallaInicio(modifier: Modifier = Modifier){
 }
 
 @Composable
-fun ComPiloto(piloto: Piloto, modoEliminar: Boolean) {
+fun ComPiloto(
+    piloto: Piloto,
+    modoEliminar: Boolean,
+    estaSeleccionado: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -277,7 +303,7 @@ fun ComPiloto(piloto: Piloto, modoEliminar: Boolean) {
             contentScale = ContentScale.Crop,
             alignment = Alignment.TopCenter, // Enfoca la parte superior donde está la cara
             modifier = Modifier
-                .size(60.dp)
+                .size(90.dp)
                 .clip(CircleShape) // Recorta en forma circular
         )
 
@@ -291,16 +317,19 @@ fun ComPiloto(piloto: Piloto, modoEliminar: Boolean) {
             Text("${piloto.carrera}, ${piloto.fecha}", color = Color.White)
             Text("${piloto.puntaje} pts", color = Color.White)
         }
-
         if (modoEliminar) {
-            var checked by remember { mutableStateOf(false) }
             Checkbox(
-                enabled = modoEliminar,
-                checked = checked,
-                onCheckedChange = { checked = !checked },
-
+                checked = estaSeleccionado,
+                onCheckedChange = onCheckedChange,
+                colors = CheckboxDefaults.colors(
+                    checkedColor = Color.White,
+                    checkmarkColor = piloto.escuderia.color,
+                    uncheckedColor = Color.White
                 )
+            )
         }
+
+
 
     }
 
