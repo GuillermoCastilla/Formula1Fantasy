@@ -5,15 +5,16 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -29,7 +30,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.formula1fantasy.R
@@ -131,12 +134,23 @@ fun pantallaInicio(modifier: Modifier = Modifier){
     Column(modifier = modifier) {
         Text("Bienvenido a tu fantasy league")
 
-        val listaNombrePilotos = mutableListOf<String>()
-        listaPilotos.forEach { listaNombrePilotos.add(it.nombre) }
+        val escuderias = mutableListOf<String>(
+            Escuderia.RED_BULL.name,
+            Escuderia.FERRARI.name,
+            Escuderia.MERCEDES.name,
+            Escuderia.MCLAREN.name,
+            Escuderia.ASTON_MARTIN.name,
+            Escuderia.ALPINE.name,
+            Escuderia.WILLIAMS.name,
+            Escuderia.RACING_BULLS.name,
+            Escuderia.KICK_SAUBER.name,
+            Escuderia.HAAS.name,
+        )
         var buscado by remember { mutableStateOf("") }
         var estadoBarra = rememberSearchBarState()
         var estadoTexto = rememberTextFieldState()
         val scope = rememberCoroutineScope()
+        var modoEliminar by remember { mutableStateOf(false) }
 
         SearchBar(
             state = estadoBarra,
@@ -179,7 +193,7 @@ fun pantallaInicio(modifier: Modifier = Modifier){
                     .fillMaxSize()
                     .padding(horizontal = 16.dp)
             ) {
-                items(listaNombrePilotos) {
+                items(escuderias) {
                     if (it.contains(estadoTexto.text, ignoreCase = true)) {
                         ListItem(
                             headlineContent = { Text(it) },
@@ -195,27 +209,35 @@ fun pantallaInicio(modifier: Modifier = Modifier){
 
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
+                .weight(1f)
                 .padding(horizontal = 16.dp)
         ) {
-            //
-            items(listaNombrePilotos) {
-                if (it.contains(buscado)) {
-                    Text(it, modifier = Modifier.size(150.dp))
+            items(listaPilotos) {
+                if (it.escuderia.name.contains(buscado)) {
+                    ComPiloto(it)
                 }
             }
         }
 
-        LazyColumn() {
-            items(listaPilotos) {
-                ComPiloto(it)
-            }
-        }
-        Row {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             ExtendedFloatingActionButton(
                 onClick = { /* Acción para añadir */ },
                 icon = { Icon(Icons.Default.Add, contentDescription = "Añadir") },
-                text = { Text("Añadir") }
+                text = { Text("Añadir") },
+                containerColor = Color.Gray //
+            )
+
+            ExtendedFloatingActionButton(
+                onClick = { modoEliminar = true },
+                icon = { Icon(Icons.Default.Delete, contentDescription = "Eliminar") },
+                text = { Text("Eliminar") },
+
             )
         }
     }
