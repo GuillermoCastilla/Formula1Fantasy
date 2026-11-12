@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.example.formula1fantasy.pantallas.pantallaInicio
+import com.example.formula1fantasy.pantallas.PantallaInicio
 import com.example.formula1fantasy.ui.theme.Formula1FantasyTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Formula1FantasyTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    pantallaInicio(modifier = Modifier.padding(innerPadding))
+                    PantallaInicio(modifier = Modifier.padding(innerPadding))
                 }
             }
         }

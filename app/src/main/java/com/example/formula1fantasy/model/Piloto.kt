@@ -8,6 +8,6 @@ data class Piloto(
     val carrera: String,
     val fecha: String,
     val puntaje: Int,
-    val posicion: Posicion,
+    val neumaticos: List<Neumaticos>,
     @DrawableRes val imagen: Int? = null
 )

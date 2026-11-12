@@ -50,13 +50,13 @@ import androidx.compose.ui.unit.dp
 import com.example.formula1fantasy.R
 import com.example.formula1fantasy.model.Escuderia
 import com.example.formula1fantasy.model.Piloto
-import com.example.formula1fantasy.model.Posicion
+import com.example.formula1fantasy.model.Neumaticos
 import kotlinx.coroutines.launch
 import kotlin.text.contains
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun pantallaInicio(modifier: Modifier = Modifier){
+fun PantallaInicio(modifier: Modifier = Modifier){
 
     val listaPilotos = remember {
         mutableStateListOf(
@@ -66,7 +66,7 @@ fun pantallaInicio(modifier: Modifier = Modifier){
                 carrera = "GP de Baréin",
                 fecha = "02/03/2026",
                 puntaje = 95,
-                posicion = Posicion.PILOTO_1,
+                neumaticos = listOf(Neumaticos.MEDIOS, Neumaticos.DUROS),
                 imagen = R.drawable.verstappen
             ),
             Piloto(
@@ -75,7 +75,7 @@ fun pantallaInicio(modifier: Modifier = Modifier){
                 carrera = "GP de Baréin",
                 fecha = "02/03/2026",
                 puntaje = 88,
-                posicion = Posicion.PILOTO_1,
+                neumaticos = listOf(Neumaticos.BLANDOS, Neumaticos.MEDIOS),
                 imagen = R.drawable.alonso
             ),
             Piloto(
@@ -84,7 +84,7 @@ fun pantallaInicio(modifier: Modifier = Modifier){
                 carrera = "GP de Baréin",
                 fecha = "02/03/2026",
                 puntaje = 84,
-                posicion = Posicion.PILOTO_2,
+                neumaticos = listOf(Neumaticos.MEDIOS, Neumaticos.DUROS),
                 imagen = R.drawable.hamilton
             ),
             Piloto(
@@ -93,7 +93,7 @@ fun pantallaInicio(modifier: Modifier = Modifier){
                 carrera = "GP de Baréin",
                 fecha = "02/03/2026",
                 puntaje = 90,
-                posicion = Posicion.PILOTO_1,
+                neumaticos = listOf(Neumaticos.BLANDOS, Neumaticos.DUROS),
                 imagen = R.drawable.leclerc
             ),
             Piloto(
@@ -102,7 +102,7 @@ fun pantallaInicio(modifier: Modifier = Modifier){
                 carrera = "GP de Baréin",
                 fecha = "02/03/2026",
                 puntaje = 86,
-                posicion = Posicion.PILOTO_2,
+                neumaticos = listOf(Neumaticos.MEDIOS, Neumaticos.BLANDOS),
                 imagen = R.drawable.sainz
             ),
             Piloto(
@@ -111,7 +111,7 @@ fun pantallaInicio(modifier: Modifier = Modifier){
                 carrera = "GP de Baréin",
                 fecha = "02/03/2026",
                 puntaje = 89,
-                posicion = Posicion.PILOTO_1,
+                neumaticos = listOf(Neumaticos.MEDIOS, Neumaticos.DUROS),
                 imagen = R.drawable.norris
             ),
             Piloto(
@@ -120,7 +120,7 @@ fun pantallaInicio(modifier: Modifier = Modifier){
                 carrera = "GP de Baréin",
                 fecha = "02/03/2026",
                 puntaje = 82,
-                posicion = Posicion.PILOTO_2,
+                neumaticos = listOf(Neumaticos.BLANDOS, Neumaticos.MEDIOS),
                 imagen = R.drawable.piastri
             ),
             Piloto(
@@ -129,7 +129,7 @@ fun pantallaInicio(modifier: Modifier = Modifier){
                 carrera = "GP de Baréin",
                 fecha = "02/03/2026",
                 puntaje = 85,
-                posicion = Posicion.PILOTO_1,
+                neumaticos = listOf(Neumaticos.MEDIOS, Neumaticos.DUROS),
                 imagen = R.drawable.russell
             ),
             Piloto(
@@ -138,7 +138,7 @@ fun pantallaInicio(modifier: Modifier = Modifier){
                 carrera = "GP de Baréin",
                 fecha = "02/03/2026",
                 puntaje = 75,
-                posicion = Posicion.RESERVA,
+                neumaticos = listOf(Neumaticos.INTERMEDIOS, Neumaticos.LLUVIA_EXTREMA),
                 imagen = R.drawable.colapinto
             )
         )
@@ -316,6 +316,7 @@ fun ComPiloto(
             Text(piloto.escuderia.name, color = Color.White)
             Text("${piloto.carrera}, ${piloto.fecha}", color = Color.White)
             Text("${piloto.puntaje} pts", color = Color.White)
+            Text("Neumáticos: ${piloto.neumaticos.joinToString { it.name }}", color = Color.White)
         }
         if (modoEliminar) {
             Checkbox(
