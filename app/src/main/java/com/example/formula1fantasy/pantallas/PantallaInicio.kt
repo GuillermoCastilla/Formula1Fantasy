@@ -4,16 +4,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
@@ -32,6 +37,7 @@ import com.example.formula1fantasy.model.Escuderia
 import com.example.formula1fantasy.model.Piloto
 import com.example.formula1fantasy.model.Posicion
 import kotlinx.coroutines.launch
+import kotlin.text.contains
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -150,6 +156,56 @@ fun pantallaInicio(modifier: Modifier = Modifier){
                 .fillMaxWidth()
                 .padding(8.dp)
         )
+
+        ExpandedFullScreenSearchBar(
+            state = estadoBarra,
+            inputField = {
+                SearchBarDefaults.InputField(
+                    textFieldState = estadoTexto,
+                    searchBarState = estadoBarra,
+                    onSearch = {
+                        buscado = estadoTexto.text.toString()
+                        scope.launch {
+                            estadoBarra.animateToCollapsed()
+                        }
+                    },
+                    placeholder = {Text("Buscar...")},
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") }
+                )
+            }
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+            ) {
+                items(listaNombrePilotos) {
+                    if (it.contains(estadoTexto.text, ignoreCase = true)) {
+                        ListItem(
+                            headlineContent = { Text(it) },
+                            modifier = Modifier.clickable {
+                                buscado = it
+                                scope.launch { estadoBarra.animateToCollapsed() }
+                            }
+                        )
+                    }
+                }
+            }
+        }
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+        ) {
+            //
+            items(listaNombrePilotos) {
+                if (it.contains(buscado)) {
+                    Text(it, modifier = Modifier.size(150.dp))
+                }
+            }
+        }
+
         LazyColumn() {
             items(listaPilotos) {
                 ComPiloto(it)
