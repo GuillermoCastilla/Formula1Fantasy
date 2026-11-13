@@ -56,93 +56,12 @@ import kotlin.text.contains
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PantallaInicio(modifier: Modifier = Modifier){
+fun PantallaInicio(
+    listaPilotos: MutableList<Piloto>,
+    onNavegarACrear: () -> Unit,
+    modifier: Modifier = Modifier
+){
 
-    val listaPilotos = remember {
-        mutableStateListOf(
-            Piloto(
-                nombre = "Max Verstappen",
-                escuderia = Escuderia.RED_BULL,
-                carrera = "GP de Baréin",
-                fecha = "02/03/2026",
-                puntaje = 95,
-                neumaticos = listOf(Neumaticos.MEDIOS, Neumaticos.DUROS),
-                imagen = R.drawable.verstappen
-            ),
-            Piloto(
-                nombre = "Fernando Alonso",
-                escuderia = Escuderia.ASTON_MARTIN,
-                carrera = "GP de Baréin",
-                fecha = "02/03/2026",
-                puntaje = 88,
-                neumaticos = listOf(Neumaticos.BLANDOS, Neumaticos.MEDIOS),
-                imagen = R.drawable.alonso
-            ),
-            Piloto(
-                nombre = "Lewis Hamilton",
-                escuderia = Escuderia.FERRARI,
-                carrera = "GP de Baréin",
-                fecha = "02/03/2026",
-                puntaje = 84,
-                neumaticos = listOf(Neumaticos.MEDIOS, Neumaticos.DUROS),
-                imagen = R.drawable.hamilton
-            ),
-            Piloto(
-                nombre = "Charles Leclerc",
-                escuderia = Escuderia.FERRARI,
-                carrera = "GP de Baréin",
-                fecha = "02/03/2026",
-                puntaje = 90,
-                neumaticos = listOf(Neumaticos.BLANDOS, Neumaticos.DUROS),
-                imagen = R.drawable.leclerc
-            ),
-            Piloto(
-                nombre = "Carlos Sainz",
-                escuderia = Escuderia.WILLIAMS,
-                carrera = "GP de Baréin",
-                fecha = "02/03/2026",
-                puntaje = 86,
-                neumaticos = listOf(Neumaticos.MEDIOS, Neumaticos.BLANDOS),
-                imagen = R.drawable.sainz
-            ),
-            Piloto(
-                nombre = "Lando Norris",
-                escuderia = Escuderia.MCLAREN,
-                carrera = "GP de Baréin",
-                fecha = "02/03/2026",
-                puntaje = 89,
-                neumaticos = listOf(Neumaticos.MEDIOS, Neumaticos.DUROS),
-                imagen = R.drawable.norris
-            ),
-            Piloto(
-                nombre = "Oscar Piastri",
-                escuderia = Escuderia.MCLAREN,
-                carrera = "GP de Baréin",
-                fecha = "02/03/2026",
-                puntaje = 82,
-                neumaticos = listOf(Neumaticos.BLANDOS, Neumaticos.MEDIOS),
-                imagen = R.drawable.piastri
-            ),
-            Piloto(
-                nombre = "George Russell",
-                escuderia = Escuderia.MERCEDES,
-                carrera = "GP de Baréin",
-                fecha = "02/03/2026",
-                puntaje = 85,
-                neumaticos = listOf(Neumaticos.MEDIOS, Neumaticos.DUROS),
-                imagen = R.drawable.russell
-            ),
-            Piloto(
-                nombre = "Franco Colapinto",
-                escuderia = Escuderia.WILLIAMS,
-                carrera = "GP de Baréin",
-                fecha = "02/03/2026",
-                puntaje = 75,
-                neumaticos = listOf(Neumaticos.INTERMEDIOS, Neumaticos.LLUVIA_EXTREMA),
-                imagen = R.drawable.colapinto
-            )
-        )
-    }
     val pilotosSeleccionados = remember { mutableStateListOf<Piloto>() }
     Column(modifier = modifier) {
         Text("Bienvenido a tu fantasy league")
@@ -251,7 +170,7 @@ fun PantallaInicio(modifier: Modifier = Modifier){
             verticalAlignment = Alignment.CenterVertically
         ) {
             ExtendedFloatingActionButton(
-                onClick = { /* Acción para añadir */ },
+                onClick = onNavegarACrear,
                 containerColor = if (!modoEliminar) MaterialTheme.colorScheme.primaryContainer
                 else Color.LightGray,
                 contentColor = if (!modoEliminar) MaterialTheme.colorScheme.onPrimaryContainer
