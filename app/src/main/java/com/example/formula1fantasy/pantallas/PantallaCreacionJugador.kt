@@ -31,7 +31,7 @@ import com.example.formula1fantasy.model.Escuderia
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun desplegable(
+fun Desplegable(
     nombresPiloto: List<String>,
     pilotoSeleccionado: String,
     onPilotoSeleccionado: (String) -> Unit
@@ -122,7 +122,7 @@ fun PantallaCreacionJugador(modifier: Modifier = Modifier){
 
     Column(modifier = modifier.fillMaxWidth().padding(16.dp)) {
         Text("Introduce el nombre del piloto:")
-        desplegable(
+        Desplegable(
             nombresPiloto = nombresPiloto,
             pilotoSeleccionado = nombrePiloto,
             onPilotoSeleccionado = { nombrePiloto = it }
